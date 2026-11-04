@@ -98,7 +98,7 @@ public class FinancialTracker {
             Transaction entry = new Transaction(date, time, description, vendor, amount);
             transactions.add(entry);
 
-            System.out.println(entry.getDate().toString() + entry.getTime().toString() + entry.getDescription().toString() + entry.getVendor().toString() + entry.getAmount());
+            System.out.println(entry.toString());
         }
         reader.close();
     } catch (IOException e) {
