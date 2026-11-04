@@ -73,7 +73,7 @@ public class FinancialTracker {
        File I/O
        ------------------------------------------------------------------ */
 
-    FileWriter writer = new FileWriter(FILE_NAME);
+
     /**
      * Load transactions from FILE_NAME.
      * • If the file doesn’t exist, create an empty one so that future writes succeed.
