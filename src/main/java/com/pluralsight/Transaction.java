@@ -10,7 +10,7 @@ public class Transaction {
     private String vendor;
     private double amount;
 
-    public Transaction(LocalDate date, LocalTime time, String description, String vendor, int amount) {
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -57,4 +57,9 @@ public class Transaction {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+    public String toString() {
+        return date + "|" + time + "|" + description + "|" + vendor + String.format("|%.2f", amount);
+    }
+
 }
