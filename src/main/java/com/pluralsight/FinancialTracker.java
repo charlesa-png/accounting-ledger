@@ -1,6 +1,6 @@
 package com.pluralsight;
 
-import java.io.File;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +36,9 @@ public class FinancialTracker {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern(TIME_PATTERN);
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
+    public FinancialTracker() throws FileNotFoundException {
+    }
+
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
@@ -70,6 +73,7 @@ public class FinancialTracker {
        File I/O
        ------------------------------------------------------------------ */
 
+    FileWriter writer = new FileWriter(FILE_NAME);
     /**
      * Load transactions from FILE_NAME.
      * • If the file doesn’t exist, create an empty one so that future writes succeed.
@@ -79,6 +83,30 @@ public class FinancialTracker {
         // TODO: create file if it does not exist, then read each line,
         //       parse the five fields, build a Transaction object,
         //       and add it to the transactions list.
+    try {
+        BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+
+        reader.readLine();
+
+        String csvLine;
+        while ((csvLine = reader.readLine()) != null) {
+            String[] tokens = csvLine.split("\\|");
+            LocalDate date = LocalDate.parse(tokens[0]);
+            LocalTime time = LocalTime.parse(tokens[1]);
+            String description = tokens[2];
+            String vendor = tokens[3];
+            double amount = Double.parseDouble(tokens[4]);
+
+            Transaction entry = new Transaction(date, time, description, vendor, amount);
+
+            System.out.println(entry.getDate().toString() + entry.getTime().toString() + entry.getDescription().toString() + entry.getVendor().toString() + entry.getAmount());
+        }
+        reader.close();
+    } catch (IOException e) {
+        System.out.println("ERROR: An unexpected error occurred");
+        e.printStackTrace();
+    }
+        System.out.println();
     }
 
     /* ------------------------------------------------------------------
@@ -92,7 +120,7 @@ public class FinancialTracker {
      * Store the amount as-is (positive) and append to the file.
      */
     private static void addDeposit(Scanner scanner) {
-        // TODO
+
     }
 
     /**
