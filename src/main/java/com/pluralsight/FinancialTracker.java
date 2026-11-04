@@ -86,8 +86,6 @@ public class FinancialTracker {
     try {
         BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
 
-        reader.readLine();
-
         String csvLine;
         while ((csvLine = reader.readLine()) != null) {
             String[] tokens = csvLine.split("\\|");
@@ -98,6 +96,7 @@ public class FinancialTracker {
             double amount = Double.parseDouble(tokens[4]);
 
             Transaction entry = new Transaction(date, time, description, vendor, amount);
+            transactions.add(entry);
 
             System.out.println(entry.getDate().toString() + entry.getTime().toString() + entry.getDescription().toString() + entry.getVendor().toString() + entry.getAmount());
         }
