@@ -289,7 +289,14 @@ public class FinancialTracker {
     }
 
     private static void filterTransactionsByVendor(String vendor) {
-        // TODO – iterate transactions, print those with matching vendor
+        for (Transaction transaction : transactions) {
+            if(transaction.getVendor().equalsIgnoreCase(vendor)){
+                System.out.println(transaction);
+            }else{
+                System.out.println("No transactions found");
+            }
+
+        }
     }
 
     private static void customSearch(Scanner scanner) {
