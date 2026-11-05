@@ -150,7 +150,7 @@ public class FinancialTracker {
                 System.out.println("Amount must be greater than 0");
             }
 //        else{
-//            System.out.println("Invalid input please enter a valid number");
+//            System.out.println("Invalid input please enter a valid amount");
 //            scanner.next();
         }
 
@@ -177,7 +177,47 @@ public class FinancialTracker {
      * then converted to a negative amount before storing.
      */
     private static void addPayment(Scanner scanner) {
-        // TODO (P)
+        System.out.println("Please enter the details of your transaction. ");
+
+
+        System.out.println("Enter the date and time of the expense in the format (yyyy-MM-dd HH:mm:ss):");
+        String dateTimeStr = scanner.nextLine().trim();
+
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, DATETIME_FMT);
+        LocalDate dateOfTran = dateTime.toLocalDate();
+        LocalTime timeOfTran = dateTime.toLocalTime();
+
+        System.out.println("Enter the description of the transaction:");
+        String descOfTran = scanner.nextLine().trim();
+        System.out.println("Enter the vendor name:");
+        String vendorName = scanner.nextLine().trim();
+
+        double tranAmt = 0;
+
+            System.out.println("Enter the transaction amount in the format (0.00):");
+            tranAmt = scanner.nextDouble();
+            scanner.nextLine();
+            double posAmt = Math.abs(tranAmt);
+
+//        else{
+//            System.out.println("Invalid input please enter a valid amount");
+//            scanner.next();
+
+
+
+        Transaction entry = new Transaction(dateOfTran, timeOfTran, descOfTran, vendorName, -1 * (posAmt));
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true));
+            writer.write(entry.toString() + "\n");
+            transactions.add(entry);
+            writer.close();
+            System.out.println("Payment added successfully\n");
+
+        } catch (IOException e) {
+            System.out.println("ERROR: An unexpected error occurred");
+            e.printStackTrace();
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -210,7 +250,9 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger() { /* TODO – print all transactions in column format, newest first (A) */ }
+    private static void displayLedger() {
+
+    }
 
     private static void displayDeposits() { /* TODO – only amount > 0     (D)          */ }
 
