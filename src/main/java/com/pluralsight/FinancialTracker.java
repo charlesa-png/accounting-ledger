@@ -7,25 +7,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Collections;
 
-/*
- * Capstone skeleton – personal finance tracker.
- * ------------------------------------------------
- * File format  (pipe-delimited)
- *     yyyy-MM-dd|HH:mm:ss|description|vendor|amount
- * A deposit has a positive amount; a payment is stored
- * as a negative amount.
- *
- * TODO: create the Transaction class in this package first.
- *       One object = one line of the file. Decide its fields from
- *       the file format above, add a constructor and getters.
- *       This class does not compile until Transaction exists.
- */
+
 public class FinancialTracker {
 
-    /* ------------------------------------------------------------------
-       Shared data and formatters
-       ------------------------------------------------------------------ */
+
     private static final ArrayList<Transaction> transactions = new ArrayList<>();
     private static final String FILE_NAME = "transactions.csv";
 
@@ -40,9 +27,7 @@ public class FinancialTracker {
     public FinancialTracker() throws FileNotFoundException {
     }
 
-    /* ------------------------------------------------------------------
-       Main menu
-       ------------------------------------------------------------------ */
+
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
 
@@ -70,46 +55,37 @@ public class FinancialTracker {
         scanner.close();
     }
 
-    /* ------------------------------------------------------------------
-       File I/O
-       ------------------------------------------------------------------ */
 
-
-    /**
-     * Load transactions from FILE_NAME.
-     * • If the file doesn’t exist, create an empty one so that future writes succeed.
-     * • Each line looks like: date|time|description|vendor|amount
-     */
     public static void loadTransactions(String fileName) {
+            Collections.sort(transactions);
+        try {
+            File file = new File(fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+                return;
+            }
 
-    try {
-        File file = new File(fileName);
-        if (!file.exists()) {
-            file.createNewFile();
-            return;
+            BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+
+            String csvLine;
+            while ((csvLine = reader.readLine()) != null) {
+                String[] tokens = csvLine.split("\\|");
+                LocalDate date = LocalDate.parse(tokens[0]);
+                LocalTime time = LocalTime.parse(tokens[1]);
+                String description = tokens[2];
+                String vendor = tokens[3];
+                double amount = Double.parseDouble(tokens[4]);
+
+                Transaction entry = new Transaction(date, time, description, vendor, amount);
+                transactions.add(entry);
+
+                System.out.println(entry.toString());
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: An unexpected error occurred");
+            e.printStackTrace();
         }
-
-        BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-
-        String csvLine;
-        while ((csvLine = reader.readLine()) != null) {
-            String[] tokens = csvLine.split("\\|");
-            LocalDate date = LocalDate.parse(tokens[0]);
-            LocalTime time = LocalTime.parse(tokens[1]);
-            String description = tokens[2];
-            String vendor = tokens[3];
-            double amount = Double.parseDouble(tokens[4]);
-
-            Transaction entry = new Transaction(date, time, description, vendor, amount);
-            transactions.add(entry);
-
-            System.out.println(entry.toString());
-        }
-        reader.close();
-    } catch (IOException e) {
-        System.out.println("ERROR: An unexpected error occurred");
-        e.printStackTrace();
-    }
         System.out.println();
     }
 
@@ -194,10 +170,16 @@ public class FinancialTracker {
 
         double tranAmt = 0;
 
+        while (true) {
             System.out.println("Enter the transaction amount in the format (0.00):");
             tranAmt = scanner.nextDouble();
             scanner.nextLine();
-            double posAmt = Math.abs(tranAmt);
+            if (tranAmt > 0) {
+                break;
+            } else {
+                System.out.println("Amount must be greater than 0");
+            }
+        }
 
 //        else{
 //            System.out.println("Invalid input please enter a valid amount");
@@ -205,7 +187,7 @@ public class FinancialTracker {
 
 
 
-        Transaction entry = new Transaction(dateOfTran, timeOfTran, descOfTran, vendorName, -1 * (posAmt));
+        Transaction entry = new Transaction(dateOfTran, timeOfTran, descOfTran, vendorName, -1 * (tranAmt));
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true));
@@ -224,6 +206,7 @@ public class FinancialTracker {
        Ledger menu
        ------------------------------------------------------------------ */
     private static void ledgerMenu(Scanner scanner) {
+
         boolean running = true;
         while (running) {
             System.out.println("Ledger");
@@ -251,7 +234,9 @@ public class FinancialTracker {
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
     private static void displayLedger() {
-
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+        }
     }
 
     private static void displayDeposits() { /* TODO – only amount > 0     (D)          */ }
@@ -293,7 +278,14 @@ public class FinancialTracker {
        Reporting helpers
        ------------------------------------------------------------------ */
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
-        // TODO – iterate transactions, print those within the range
+        for (Transaction transaction : transactions) {
+            if (transaction.getDate().isAfter(start) && transaction.getDate().isBefore(end)){
+                System.out.println(transaction);
+            } else{
+                System.out.println("No transactions found");
+            }
+
+        }
     }
 
     private static void filterTransactionsByVendor(String vendor) {
