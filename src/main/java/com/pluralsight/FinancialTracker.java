@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -80,10 +81,14 @@ public class FinancialTracker {
      * • Each line looks like: date|time|description|vendor|amount
      */
     public static void loadTransactions(String fileName) {
-        // TODO: create file if it does not exist, then read each line,
-        //       parse the five fields, build a Transaction object,
-        //       and add it to the transactions list.
+
     try {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            file.createNewFile();
+            return;
+        }
+
         BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
 
         String csvLine;
@@ -119,8 +124,52 @@ public class FinancialTracker {
      * Store the amount as-is (positive) and append to the file.
      */
     private static void addDeposit(Scanner scanner) {
+        System.out.println("Please enter the details of your transaction. ");
 
+
+        System.out.println("Enter the date and time of the transaction in the format (yyyy-MM-dd HH:mm:ss):");
+        String dateTimeStr = scanner.nextLine().trim();
+
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, DATETIME_FMT);
+        LocalDate dateOfTran = dateTime.toLocalDate();
+        LocalTime timeOfTran = dateTime.toLocalTime();
+
+        System.out.println("Enter the description of the transaction:");
+        String descOfTran = scanner.nextLine().trim();
+        System.out.println("Enter the vendor name:");
+        String vendorName = scanner.nextLine().trim();
+
+        double tranAmt = 0;
+        while (true) {
+            System.out.println("Enter the transaction amount in the format (0.00):");
+            tranAmt = scanner.nextDouble();
+            scanner.nextLine();
+            if (tranAmt > 0) {
+                break;
+            } else {
+                System.out.println("Amount must be greater than 0");
+            }
+//        else{
+//            System.out.println("Invalid input please enter a valid number");
+//            scanner.next();
+        }
+
+
+        Transaction entry = new Transaction(dateOfTran, timeOfTran, descOfTran, vendorName, tranAmt);
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true));
+            writer.write(entry.toString() + "\n");
+            transactions.add(entry);
+            writer.close();
+            System.out.println("Deposit added successfully\n");
+
+        } catch (IOException e) {
+            System.out.println("ERROR: An unexpected error occurred");
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Same prompts as addDeposit.
@@ -128,7 +177,7 @@ public class FinancialTracker {
      * then converted to a negative amount before storing.
      */
     private static void addPayment(Scanner scanner) {
-        // TODO
+        // TODO (P)
     }
 
     /* ------------------------------------------------------------------
@@ -161,11 +210,11 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger() { /* TODO – print all transactions in column format, newest first */ }
+    private static void displayLedger() { /* TODO – print all transactions in column format, newest first (A) */ }
 
-    private static void displayDeposits() { /* TODO – only amount > 0               */ }
+    private static void displayDeposits() { /* TODO – only amount > 0     (D)          */ }
 
-    private static void displayPayments() { /* TODO – only amount < 0               */ }
+    private static void displayPayments() { /* TODO – only amount < 0      (P)         */ }
 
     /* ------------------------------------------------------------------
        Reports menu
