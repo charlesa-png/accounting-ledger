@@ -57,7 +57,7 @@ public class FinancialTracker {
 
 
     public static void loadTransactions(String fileName) {
-            Collections.sort(transactions);
+//            Collections.sort(transactions);
         try {
             File file = new File(fileName);
             if (!file.exists()) {
@@ -239,9 +239,32 @@ public class FinancialTracker {
         }
     }
 
-    private static void displayDeposits() { /* TODO – only amount > 0     (D)          */ }
+    private static void displayDeposits() {
+       boolean found = false;
+        for (Transaction transaction : transactions) {
+            if(transaction.getAmount() >= 0){
+                System.out.println(transaction);
+                found = true;
+            }
+        }
+        if(found == false){
+            System.out.println("No transactions found");
+        }
+    }
 
-    private static void displayPayments() { /* TODO – only amount < 0      (P)         */ }
+    private static void displayPayments() {
+        boolean found = false;
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() < 0) {
+                System.out.println(transaction);
+                found = true;
+
+            }
+        }
+        if (found == false){
+            System.out.println("No transactions found");
+        }
+    }
 
     /* ------------------------------------------------------------------
        Reports menu
@@ -262,7 +285,9 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> {/* TODO – month-to-date report */ }
+                case "1" -> {
+//                    filterTransactionsByDate
+                }
                 case "2" -> {/* TODO – previous month report */ }
                 case "3" -> {/* TODO – year-to-date report   */ }
                 case "4" -> {/* TODO – previous year report  */ }
@@ -278,24 +303,30 @@ public class FinancialTracker {
        Reporting helpers
        ------------------------------------------------------------------ */
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
+        boolean found = false;
         for (Transaction transaction : transactions) {
             if (transaction.getDate().isAfter(start) && transaction.getDate().isBefore(end)){
                 System.out.println(transaction);
-            } else{
-                System.out.println("No transactions found");
+                found = true;
+
             }
 
+        }
+        if(found == false){
+            System.out.println("No transactions found");
         }
     }
 
     private static void filterTransactionsByVendor(String vendor) {
+        boolean found = false;
         for (Transaction transaction : transactions) {
             if(transaction.getVendor().equalsIgnoreCase(vendor)){
                 System.out.println(transaction);
-            }else{
-                System.out.println("No transactions found");
+                found = true;
             }
-
+        }
+        if(found == false){
+            System.out.println("No transactions found");
         }
     }
 
