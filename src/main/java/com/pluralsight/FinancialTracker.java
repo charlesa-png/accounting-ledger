@@ -254,6 +254,7 @@ public class FinancialTracker {
 
     private static void displayDeposits() {
         boolean found = false;
+        transactions.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() >= 0) { //checks for positive entries
                 System.out.println(transaction); //prints
@@ -267,6 +268,7 @@ public class FinancialTracker {
 
     private static void displayPayments() {
         boolean found = false;
+        transactions.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() < 0) { //checks for negative entries
                 System.out.println(transaction); //prints them
@@ -281,6 +283,7 @@ public class FinancialTracker {
 
     private static void reportsMenu(Scanner scanner) {
         boolean running = true;
+        transactions.sort(Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
         while (running) {
             System.out.println("Reports");
             System.out.println("Choose an option:");
