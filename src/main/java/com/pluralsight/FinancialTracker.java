@@ -35,8 +35,14 @@ public class FinancialTracker {
         boolean running = true;
 
         while (running) {
-            System.out.println("Welcome to TransactionApp");
-            System.out.println("Choose an option:");
+            System.out.println("==================================================");
+            System.out.println("          💼 PERSONAL ACCOUNTING LEDGER 💼        ");
+            System.out.println("               Track & Manage Finances            ");
+            System.out.println("==================================================");
+            System.out.println();
+            System.out.println("Hello! Welcome to your LedgerApp!\n");
+            System.out.println("What would you like to do today?");
+            System.out.println("Please choose from the following options:");
             System.out.println("D) Add Deposit");
             System.out.println("P) Make Payment (Debit)");
             System.out.println("L) Ledger");
@@ -95,7 +101,7 @@ public class FinancialTracker {
 
         boolean validEntry = false;
         LocalDateTime dateTime = null;
-        while(validEntry == false) {
+        while (validEntry == false) {
             System.out.println("Enter the date and time of the transaction in the format (yyyy-MM-dd HH:mm:ss):");
             String dateTimeStr = scanner.nextLine().trim();
 
@@ -107,8 +113,8 @@ public class FinancialTracker {
             }
         }
 
-            LocalDate dateOfTran = dateTime.toLocalDate(); // breaks it into local date
-            LocalTime timeOfTran = dateTime.toLocalTime(); // and local time
+        LocalDate dateOfTran = dateTime.toLocalDate(); // breaks it into local date
+        LocalTime timeOfTran = dateTime.toLocalTime(); // and local time
 
         System.out.println("Enter the description of the transaction:");
         String descOfTran = scanner.nextLine().trim();
@@ -123,14 +129,13 @@ public class FinancialTracker {
                 System.out.println("Invalid input please enter a valid amount"); // Error for non-numbers
                 scanner.next();
                 continue;
-            }else
-            {
+            } else {
                 tranAmt = scanner.nextDouble();
                 scanner.nextLine();
             }
-             if (tranAmt >= 0) { // checks if the amount is positive
+            if (tranAmt >= 0) { // checks if the amount is positive
                 break; // jumps out of the loop
-            } else if (tranAmt < 0){
+            } else if (tranAmt < 0) {
                 System.out.println("Amount must be greater than 0"); //Error message for negative numbers
             }
 
@@ -157,7 +162,7 @@ public class FinancialTracker {
 
         boolean validEntry = false;
         LocalDateTime dateTime = null;
-        while(validEntry == false) {
+        while (validEntry == false) {
             System.out.println("Enter the date and time of the transaction in the format (yyyy-MM-dd HH:mm:ss):");
             String dateTimeStr = scanner.nextLine().trim();
 
@@ -187,14 +192,14 @@ public class FinancialTracker {
                 System.out.println("Invalid input please enter a valid amount"); // Error for everything else
                 scanner.next();
                 continue;
-            }else {
+            } else {
                 tranAmt = scanner.nextDouble();
                 scanner.nextLine();
             }
 
             if (tranAmt > 0) { // makes sure the amount is positive
                 break; // jumps out of the loop
-            } else if (tranAmt < 0){
+            } else if (tranAmt < 0) {
                 System.out.println("Amount must be greater than 0"); //Error message for negative numbers
             }
         }
@@ -248,14 +253,14 @@ public class FinancialTracker {
     }
 
     private static void displayDeposits() {
-       boolean found = false;
-       for (Transaction transaction : transactions) {
-            if(transaction.getAmount() >= 0){ //checks for positive entries
+        boolean found = false;
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() >= 0) { //checks for positive entries
                 System.out.println(transaction); //prints
                 found = true;
             }
         }
-        if(found == false){
+        if (found == false) {
             System.out.println("No transactions found"); //if none, no entries found
         }
     }
@@ -269,7 +274,7 @@ public class FinancialTracker {
 
             }
         }
-        if (found == false){
+        if (found == false) {
             System.out.println("No transactions found"); //if none, prints no entries found
         }
     }
@@ -303,16 +308,16 @@ public class FinancialTracker {
 
             switch (input) {
                 case "1" -> {
-                    filterTransactionsByDate(startOfMonth,today); //this month to today
+                    filterTransactionsByDate(startOfMonth, today); //this month to today
                 }
                 case "2" -> {
-                    filterTransactionsByDate(startOfLastMonth,endOfLastMonth); //last month (whole month)
+                    filterTransactionsByDate(startOfLastMonth, endOfLastMonth); //last month (whole month)
                 }
                 case "3" -> {
-                    filterTransactionsByDate(startOfYear,today); //January (start of this year) to now
+                    filterTransactionsByDate(startOfYear, today); //January (start of this year) to now
                 }
                 case "4" -> {
-                    filterTransactionsByDate(startOfLastYear,endOfLastYear); // last year (whole)
+                    filterTransactionsByDate(startOfLastYear, endOfLastYear); // last year (whole)
                 }
                 case "5" -> {
                     System.out.println("Enter the name of the vendor:");
@@ -330,13 +335,13 @@ public class FinancialTracker {
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
         boolean found = false;  //transaction not found (yet)
         for (Transaction transaction : transactions) {
-            if (!transaction.getDate().isBefore(start) && !transaction.getDate().isAfter(end)){ //inclusive
+            if (!transaction.getDate().isBefore(start) && !transaction.getDate().isAfter(end)) { //inclusive
                 System.out.println(transaction); //print each
                 found = true; // found match(es)
 
             }
         }
-        if(found == false){ //still not found
+        if (found == false) { //still not found
             System.out.println("No transactions found"); //Don't exist
         }
     }
@@ -344,12 +349,12 @@ public class FinancialTracker {
     private static void filterTransactionsByVendor(String vendor) {
         boolean found = false; //not found
         for (Transaction transaction : transactions) { //searching each transaction
-            if(transaction.getVendor().equalsIgnoreCase(vendor)){
+            if (transaction.getVendor().equalsIgnoreCase(vendor)) {
                 System.out.println(transaction); //print each
                 found = true; //end (match(es) found)
             }
         }
-        if(found == false){
+        if (found == false) {
             System.out.println("No transactions found"); //DNE
         }
     }
@@ -361,18 +366,18 @@ public class FinancialTracker {
 
 
     private static LocalDate parseDate(String s) {
-       if(!s.equalsIgnoreCase("")){
-           LocalDate parsedDate = LocalDate.parse(s);
-           return parsedDate;
-       }else {
-           return null;
-       }
+        if (!s.equalsIgnoreCase("")) {
+            LocalDate parsedDate = LocalDate.parse(s);
+            return parsedDate;
+        } else {
+            return null;
+        }
     }
 
     private static Double parseDouble(String s) {
-        if (s.equalsIgnoreCase("")){
+        if (s.equalsIgnoreCase("")) {
             return null;
-        }else{
+        } else {
             return Double.parseDouble(s);
         }
     }
