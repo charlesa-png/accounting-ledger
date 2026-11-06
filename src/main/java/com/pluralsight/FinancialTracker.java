@@ -284,14 +284,33 @@ public class FinancialTracker {
 
             String input = scanner.nextLine().trim();
 
+            LocalDate today = LocalDate.now();
+
+
+            LocalDate startOfMonth = today.withDayOfMonth(1);
+            LocalDate startOfYear = startOfMonth.withMonth(1);
+
+
+            LocalDate startOfLastMonth = startOfMonth.minusMonths(1);
+            int daysInMonth = startOfLastMonth.lengthOfMonth();
+            LocalDate endOfLastMonth = startOfLastMonth.withDayOfMonth(daysInMonth);
+            LocalDate startofLastYear = startOfYear.minusYears(1);
+            LocalDate endOfLastYear = startofLastYear.withMonth(12).withDayOfMonth(31);
+
             switch (input) {
                 case "1" -> {
-//                    filterTransactionsByDate
+                    filterTransactionsByDate(startOfMonth,today);
                 }
-                case "2" -> {/* TODO – previous month report */ }
-                case "3" -> {/* TODO – year-to-date report   */ }
-                case "4" -> {/* TODO – previous year report  */ }
-                case "5" -> {/* TODO – prompt for vendor then report */ }
+                case "2" -> {
+                    filterTransactionsByDate(startOfLastMonth,endOfLastMonth);
+                }
+                case "3" -> {
+                    filterTransactionsByDate(startOfYear,today);
+                }
+                case "4" -> {
+                    filterTransactionsByDate(startofLastYear,endOfLastYear);
+                }
+                case "5" -> {filterTransactionsByVendor()}
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
                 default -> System.out.println("Invalid option");
@@ -305,12 +324,11 @@ public class FinancialTracker {
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
         boolean found = false;
         for (Transaction transaction : transactions) {
-            if (transaction.getDate().isAfter(start) && transaction.getDate().isBefore(end)){
+            if (!transaction.getDate().isBefore(start) && !transaction.getDate().isAfter(end)){
                 System.out.println(transaction);
                 found = true;
 
             }
-
         }
         if(found == false){
             System.out.println("No transactions found");
