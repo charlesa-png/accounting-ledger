@@ -1,6 +1,6 @@
 # Accounting Ledger Capstone Project
 
-A transaction app that keeps a record of a user's deposits and payments in a csv file and lets them search it by date,
+A ledger app that keeps a record of a user's deposits and payments in a csv file and allows them search it by date,
     vendor, amount and more.
 
 ## Description of the Project
